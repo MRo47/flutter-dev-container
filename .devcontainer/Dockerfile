@@ -4,7 +4,7 @@
 # See https://github.com/lucashilles/flutter-dev-container/blob/master/LICENSE for license information.
 #-------------------------------------------------------------------------------------------------------------
 
-FROM ubuntu:latest
+FROM ubuntu:jammy AS flutter_dev
 
 RUN export DEBIAN_FRONTEND=noninteractive
 
@@ -67,13 +67,13 @@ ENV FLUTTER_VERSION="3.24.1"
 ENV FLUTTER_HOME=/home/${USER_NAME}/flutter
 ENV PATH=${PATH}:${FLUTTER_HOME}/bin
 
-
+USER $USER_NAME
 #
 # Android SDK	
-RUN curl -C - --output android-sdk-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS_VERSION}_latest.zip \
+RUN curl -C - --output /tmp/android-sdk-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS_VERSION}_latest.zip \
 	&& mkdir -p ${ANDROID_HOME}/ \
-	&& unzip -q android-sdk-tools.zip -d ${ANDROID_HOME}/cmdline-tools/ \
-	&& rm android-sdk-tools.zip \
+	&& unzip -q /tmp/android-sdk-tools.zip -d ${ANDROID_HOME}/cmdline-tools/ \
+	&& rm /tmp/android-sdk-tools.zip \
 	&& yes | sdkmanager --licenses \
 	&& touch /home/${USER_NAME}/.android/repositories.cfg \
 	&& sdkmanager platform-tools \
@@ -85,15 +85,13 @@ RUN sdkmanager "system-images;android-${ANDROID_PLATFORM_VERSION};google_apis;x8
 	&& echo "no" | avdmanager create avd -n Android${ANDROID_PLATFORM_VERSION} -k "system-images;android-${ANDROID_PLATFORM_VERSION};google_apis;x86_64"
 
 # Flutter SDK
-RUN curl -C - --output flutter.tar.xz https://storage.googleapis.com/flutter_infra_release/releases/${FLUTTER_CHANNEL}/linux/flutter_linux_${FLUTTER_VERSION}-${FLUTTER_CHANNEL}.tar.xz \
-	&& tar -xf flutter.tar.xz -C ~ \
-	&& rm flutter.tar.xz \
+RUN curl -C - --output /tmp/flutter.tar.xz https://storage.googleapis.com/flutter_infra_release/releases/${FLUTTER_CHANNEL}/linux/flutter_linux_${FLUTTER_VERSION}-${FLUTTER_CHANNEL}.tar.xz \
+	&& tar -xf /tmp/flutter.tar.xz -C /home/${USER_NAME}/ \
+	&& rm /tmp/flutter.tar.xz \
 	&& flutter config --android-sdk "${ANDROID_SDK_ROOT}" \
 	&& yes | flutter doctor --android-licenses \
 	&& flutter config --no-analytics \
 	&& flutter update-packages
-
-USER $USER_NAME
 
 # zsh install
 RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.2.0/zsh-in-docker.sh)" -- \
