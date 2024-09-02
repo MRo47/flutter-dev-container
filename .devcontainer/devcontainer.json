@@ -2,20 +2,30 @@
 // https://github.com/lucashilles/flutter-dev-container
 {
   "name": "Flutter",
-  "dockerFile": "Dockerfile",
+  "dockerComposeFile": ["docker-compose.yml"],
+  "service": "flutter-dev",
+  "workspaceFolder": "/home/${localEnv:USER}/flutter_ws",
+
   // Set *default* container specific settings.json values on container create.
   // This command create an example project after the container is created.
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   //"forwardPorts": [],
   // Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
   // "remoteUser": "vscode",
-  "workspaceMount": "source=${localWorkspaceFolder}/flutter_ws,target=/home/${localEnv:USER}/flutter_ws,type=bind",
-  "workspaceFolder": "/home/${localEnv:USER}/flutter_ws",
   "remoteUser": "${localEnv:USER}",
-  "mounts": [
-    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind",
-    "source=/home/${localEnv:USER}/.ssh,target=/home/${localEnv:USER}/.ssh,type=bind",
-    "source=/dev/bus/usb,target=/dev/bus/usb,type=bind",
-    "source=/home/${localEnv:USER}/data,target=/home/${localEnv:USER}/data,type=bind"
-  ]
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        // "eamodio.gitlens",
+        // "GitHub.copilot",
+        // "hashicorp.hcl",
+        // "ms-azuretools.vscode-docker",
+        "Dart-Code.flutter",
+        "mhutchie.git-graph",
+        "esbenp.prettier-vscode",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  }
 }
