@@ -11,3 +11,8 @@ libc6:amd64
 libstdc++6:amd64
 libbz2-1.0:amd64
 libncurses5:amd64
+#### linux tools
+# clang
+# cmake
+# ninja-build
+# pkg-config
