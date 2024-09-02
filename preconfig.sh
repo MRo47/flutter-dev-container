@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir -p flutter_ws
+
 ENV_FILE=".devcontainer/.env"
 
 echo "USER_NAME=${USER}" > ${ENV_FILE}
